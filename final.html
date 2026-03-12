@@ -53,7 +53,8 @@
         .header-title-img { width: 100%; max-width: 260px; height: auto; object-fit: contain; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.15)); }
 
         .inventory-area {
-            flex: 1; display: flex; flex-direction: column; padding: 10px 15px 20px 15px; overflow-y: auto; touch-action: pan-x pan-y; 
+            flex: 1; display: flex; flex-direction: column; padding: 10px 15px 20px 15px; overflow-y: auto; 
+            touch-action: pan-y; /* 允許原生上下滑動 */
             scrollbar-width: auto; scrollbar-color: rgba(184, 134, 11, 0.5) rgba(255, 255, 255, 0.5);
         }
         .inventory-area::-webkit-scrollbar { -webkit-appearance: none; }
@@ -65,11 +66,13 @@
 
         .inv-item {
             border: 3px solid #fff; border-radius: 16px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(255,255,255,0.95); box-shadow: 0 4px 10px rgba(0,0,0,0.08); min-height: 110px; margin-bottom: 12px; flex-shrink: 0; touch-action: none; 
+            background: rgba(255,255,255,0.95); box-shadow: 0 4px 10px rgba(0,0,0,0.08); min-height: 110px; margin-bottom: 12px; flex-shrink: 0; 
+            /* 💡 終極優化：移除 touch-action: none; 讓整張卡片的空白處恢復原生滑動！ */
+            touch-action: pan-y; 
         }
         .preview-box { width: 70px; height: 70px; display: flex; justify-content: center; align-items: center; pointer-events: none;}
         
-        /* 💡 擴增判定區：讓中心區域（包含空白處）都可以點擊，不需追著色塊 */
+        /* 擴增判定區：讓中心區域（包含空白處）都可以點擊，不需追著色塊 */
         .mini-board { 
             pointer-events: auto; /* 將判定權交給整個九宮格區塊 */
             touch-action: pan-y;  /* 維持原生上下滑動的流暢度 */
@@ -210,6 +213,7 @@
             
             /* 💡 手機版維持橫向滑動順暢 */
             .mini-board { touch-action: pan-x; } 
+            .inv-item { touch-action: pan-x; }
             
             .inventory-area { order: 3; width: 100%; height: 155px; min-height: 155px; border-right: none; border-top: 2px solid var(--grid-border-color); flex-direction: row; overflow-x: auto; padding: 10px; background: rgba(255,255,255,0.8); touch-action: pan-x; } 
             .inv-item { width: 90px; height: 100%; justify-content: space-between; padding: 8px; min-height: auto; margin: 0; margin-right: 12px;} 
@@ -403,7 +407,6 @@
             statsList.innerHTML += `<div class="stat-item"><span>${item.l}</span> <span>使用: <b>${used}</b> 個</span></div>`;
         });
         
-        // 💡 成就判定與自動填入分數魔法
         const resultBox = document.getElementById('result-box-wrapper');
         const achievementSubtext = document.getElementById('achievement-subtext');
         
